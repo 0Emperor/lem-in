@@ -41,12 +41,12 @@ func ValidData(file *os.File) error {
 			continue
 		}
 		if v == "##start" {
-			Start = data[i+1]
-			Rooms = append(Rooms, strings.Split(data[i+1], " ")[0])
+			Start = strings.Split(data[i+1], " ")[0]
+			Rooms = append(Rooms, Start)
 			i++
 		} else if v == "##end" {
-			End = data[i+1]
-			Rooms = append(Rooms, strings.Split(data[i+1], " ")[0])
+			End = strings.Split(data[i+1], " ")[0]
+			Rooms = append(Rooms, End)
 			ended = true
 			i++
 		} else if !ended {

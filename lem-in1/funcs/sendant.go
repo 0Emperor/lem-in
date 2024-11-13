@@ -3,26 +3,14 @@ package lem
 import (
 	"fmt"
 	"strconv"
-	"strings"
 )
 
 func Sendants(ways [][]string) {
-	antgroups := [][]string{}
-	antid := 1
-	for i := 0; i < len(ways); i++ {
-		antgroup := []string{}
-		for j := 0; j < Ants/len(ways); j++ {
-			antgroup = append(antgroup, "l"+strconv.Itoa(antid))
-			antid++
-
-		}
-		if Ants%len(ways) != 0 && i == 0 {
-			antgroup = append(antgroup, "l"+strconv.Itoa(antid))
-			antid++
-		}
-		antgroups = append(antgroups, antgroup)
+	antgroup := []string{}
+	for i := 1; i <= Ants; i++ {
+		antgroup = append(antgroup, "l"+strconv.Itoa(i))
 	}
-	controltrafic(antgroups, ways)
+	controltrafic(antgroup, ways)
 }
 
 type infos struct {
@@ -30,22 +18,21 @@ type infos struct {
 	currentroom string
 }
 
-func controltrafic(antgroups, ways [][]string) {
+func controltrafic(antgroups []string, ways [][]string) {
 	trafic := make(map[string]infos)
 	unavailablerooms := make(map[string]bool)
 	finished := []string{}
-	end := strings.Split(End, " ")[0]
 	for len(finished) != Ants {
 		for i := 0; i < len(ways); i++ {
-			for s, ant := range antgroups[i] {
-				if trafic[ant].currentroom == end {
+			for s, ant := range antgroups {
+				if trafic[ant].currentroom == End {
 					finished = append(finished, ant)
-					antgroups[i] = append(antgroups[i][:s], antgroups[i][s+1:]...)
-					unavailablerooms[strings.Split(End, " ")[0]] = false
-					continue
+					antgroups = append(antgroups[:s], antgroups[s+1:]...)
+					fmt.Println(111)
 				}
 				if !unavailablerooms[ways[i][trafic[ant].steps+1]] {
-					fmt.Printf("%v-%v ", ant, ways[i][trafic[ant].steps+1])
+
+					// fmt.Printf("%v-%v ", ant, ways[i][trafic[ant].steps+1])
 					ii := trafic[ant]
 					unavailablerooms[ways[i][trafic[ant].steps+1]] = true
 					unavailablerooms[ways[i][trafic[ant].steps]] = false
@@ -53,9 +40,10 @@ func controltrafic(antgroups, ways [][]string) {
 					ii.steps++
 					trafic[ant] = ii
 				}
+
 			}
 		}
-		fmt.Print("\n")
+		//	fmt.Print("\n")
 	}
 	fmt.Print(finished)
 }
