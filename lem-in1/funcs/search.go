@@ -1,28 +1,47 @@
 package lem
 
-import (
-	"fmt"
-)
-
 func Search() [][]string {
 	Dfs(Start)
 	sort(solutions)
-	fmt.Println(solutions)
-	// neededways := gettrials()
-	fmt.Println(conbine(2))
-	return conbine(2)
+	set()
+	rate()
+	return combine(gettrials())
 }
 
-func conbine(n int) [][]string {
-	
-	dd := [][]string{}
-	return sort(append(dd, solutions[1], solutions[5]))
+func set() {
+	for v := range solutions {
+		rating[v] = len(solutions[v])
+	}
 }
 
-func collide(p1, p2 []string) bool {
+var rating = make(map[int]int)
+
+func cop(p1, p2 []string) bool {
+	for i, v := range p1 {
+		if p2[i] != v {
+			return false
+		}
+	}
+	return true
+}
+
+func hhhh(paths ...[]string) bool {
+	for _, path := range paths {
+		for _, path0 := range paths {
+			if cc(path0, path) {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+func cc(p1, p2 []string) bool {
 	for i := 1; i < len(p1)-1; i++ {
+		v := p1[i]
 		for j := 1; j < len(p2)-1; j++ {
-			if p2[j] == p1[i] {
+			r := p2[j]
+			if !cop(p1, p2) && v == r {
 				return true
 			}
 		}
@@ -30,15 +49,70 @@ func collide(p1, p2 []string) bool {
 	return false
 }
 
-func collides(paths ...[]string) bool {
-	for i := 0; i < len(paths)-1; i++ {
-		for j := i+1; j < len(paths)-1; j++ {
-			if collide(paths[i], paths[j])  {
-				return true
+func rate() {
+	for i, v := range solutions {
+		for t, r := range solutions {
+			if i != t && cc(r, v) {
+				rating[i]++
 			}
 		}
 	}
-	return false
+}
+
+type ppp struct {
+	rating int
+	index  int
+}
+
+func sortby(ss []ppp) []ppp {
+	for i := 0; i < len(ss)-1; i++ {
+		for j := i + 1; j < len(ss); j++ {
+			if ss[i].rating > ss[j].rating {
+				ss[i], ss[j] = ss[j], ss[i]
+			}
+		}
+	}
+	return ss
+}
+
+func re() []ppp {
+	ss := []ppp{}
+	for i, v := range rating {
+		s := ppp{
+			rating: v,
+			index:  i,
+		}
+		ss = append(ss, s)
+	}
+	return sortby(ss)
+}
+
+func combine(n int) [][]string {
+	sss := [][]string{}
+	rrr := re()
+	max := 0
+	for u := 0; u < len(rrr); u++ {
+		e := rrr[u]
+		i := e.index
+		if len(solutions[i]) > max {
+			max = i
+		}
+		supp := [][]string{}
+		supp = append(sss, solutions[i])
+		if !hhhh(supp...) && len(solutions[i]) < 8 {
+			sss = append(sss, solutions[i])
+		} else if len(solutions[max]) > 2*len(solutions[i]) {
+			supp = [][]string{}
+			supp = append(sss, solutions[i])
+			max = i
+			u = 0
+		}
+		sort(sss)
+		if len(sss) == n {
+			break
+		}
+	}
+	return sss
 }
 
 func sort(unsorted [][]string) [][]string {
@@ -91,5 +165,3 @@ func Dfs(current string) {
 	visited[current] = false
 }
 
-// func combine(n int) [][]string {
-// }

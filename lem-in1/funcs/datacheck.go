@@ -23,7 +23,6 @@ func ValidData(file *os.File) error {
 	if err != nil {
 		return err
 	}
-	ended := false
 	for i := 0; i < len(data); i++ {
 		v := data[i]
 		if strings.HasPrefix(v, "#") && !strings.HasPrefix(v, "##") {
@@ -33,6 +32,8 @@ func ValidData(file *os.File) error {
 				log.Fatal("invalid msg")
 			}
 		}
+		Graphoverview = append(Graphoverview, data[i]...)
+		Graphoverview = append(Graphoverview, '\n')
 		if i == 0 {
 			Ants, err = strconv.Atoi(v)
 			if err != nil {
@@ -40,21 +41,49 @@ func ValidData(file *os.File) error {
 			}
 			continue
 		}
+
 		if v == "##start" {
+			if i == len(data)-1 {
+				log.Fatal("end or start room missing")
+			}
 			Start = strings.Split(data[i+1], " ")[0]
+			if len(strings.Split(data[i+1], " ")) == 1 {
+				log.Fatal("invalid input for start")
+			}
+			if Start[0] == 'L' {
+				log.Fatal("room name cant start with 'L'")
+			}
+
 			Rooms = append(Rooms, Start)
 			i++
 		} else if v == "##end" {
+			if i == len(data)-1 {
+				log.Fatal("end or start room missing")
+			}
 			End = strings.Split(data[i+1], " ")[0]
+			if len(strings.Split(data[i+1], " ")) == 1 {
+				log.Fatal("invalid input for end")
+			}
+			if End[0] == 'L' {
+				log.Fatal("room name cant start with 'L'")
+			}
 			Rooms = append(Rooms, End)
-			ended = true
 			i++
-		} else if !ended {
-			Rooms = append(Rooms, strings.Split(v, " ")[0])
+		} else if strings.Contains(v, " ") {
+			room := strings.Split(v, " ")[0]
+			if room[0] == 'L' {
+				log.Fatal("room name cant start with 'L'")
+			}
+			Rooms = append(Rooms, room)
 		} else {
 			Ways[strings.Split(v, "-")[0]] = append(Ways[strings.Split(v, "-")[0]], strings.Split(v, "-")[1])
 			Ways[strings.Split(v, "-")[1]] = append(Ways[strings.Split(v, "-")[1]], strings.Split(v, "-")[0])
 		}
+
 	}
+	if Start == "" || End == "" {
+		log.Fatal("end or start room missing")
+	}
+	Graphoverview = append(Graphoverview, '\n')
 	return nil
 }
