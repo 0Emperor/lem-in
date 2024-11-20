@@ -8,7 +8,6 @@ import (
 func Sendants(ways [][]string) {
 	antgroups := [][]string{}
 	antid := 1
-
 	if len(ways) > Ants {
 		ways = ways[:Ants]
 	}

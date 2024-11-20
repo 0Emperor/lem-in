@@ -1,7 +1,6 @@
 package lem
 
 import (
-	"fmt"
 	"slices"
 )
 
@@ -66,7 +65,6 @@ func Bfs(s, e string) {
 		}
 		levels = append(levels, levl)
 	}
-	fmt.Println(levels)
 }
 
 func contains(d []string, s [][]string) bool {
@@ -87,7 +85,7 @@ func findway(levels [][]string) []string {
 
 	for i := len(levels) - 1; i >= 0; i-- {
 		for _, v := range levels[i] {
-			if exist(curent, Start) && !contains(way,solutions) {
+			if exist(curent, Start) && !contains(way, solutions) {
 				way = append(way, Start)
 				return flip(way)
 			}
