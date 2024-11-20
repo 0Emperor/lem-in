@@ -8,6 +8,10 @@ import (
 func Sendants(ways [][]string) {
 	antgroups := [][]string{}
 	antid := 1
+
+	if len(ways) > Ants {
+		ways = ways[:Ants]
+	}
 	for i := 0; i < len(ways); i++ {
 		antgroup := []string{}
 		for j := 0; j < Ants/len(ways); j++ {
@@ -16,13 +20,22 @@ func Sendants(ways [][]string) {
 			}
 			antgroup = append(antgroup, "L"+strconv.Itoa(antid))
 			antid++
-
 		}
 		if i == 0 && antid < Ants {
 			antgroup = append(antgroup, "L"+strconv.Itoa(antid))
 			antid++
 		}
 		antgroups = append(antgroups, antgroup)
+	}
+	if antid < Ants+1 {
+		for i := 0; i < len(antgroups); i++ {
+			if antid > Ants {
+				break
+			}
+			antgroups[i] = append(antgroups[i], "L"+strconv.Itoa(antid))
+			antid++
+
+		}
 	}
 	controltrafic(antgroups, ways)
 }
@@ -56,5 +69,17 @@ func controltrafic(antgroups, ways [][]string) {
 			}
 		}
 		fmt.Println()
+	}
+	//Sort(finished)
+	//fmt.Println(finished)
+}
+
+func Sort(s []string) {
+	for i := 0; i < len(s); i++ {
+		for j := i + 1; j < len(s); j++ {
+			if s[j] < s[i] {
+				s[j], s[i] = s[i], s[j]
+			}
+		}
 	}
 }

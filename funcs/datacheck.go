@@ -3,6 +3,7 @@ package lem
 import (
 	"log"
 	"os"
+	"slices"
 	"strconv"
 	"strings"
 )
@@ -72,19 +73,24 @@ func ValidData(file *os.File) error {
 		} else if strings.Contains(v, " ") {
 			room := strings.Split(v, " ")[0]
 			if len(strings.Split(v, " ")) != 3 {
-				log.Fatal("invalid room data")
+				log.Fatal("invalid room data.....")
 			}
 			if room[0] == 'L' {
-				log.Fatal("room name cant start with 'L'")
+				log.Fatal("room name cant start with 'L'.....")
 			}
 			Rooms = append(Rooms, room)
 		} else {
-			Ways[strings.Split(v, "-")[0]] = append(Ways[strings.Split(v, "-")[0]], strings.Split(v, "-")[1])
-			Ways[strings.Split(v, "-")[1]] = append(Ways[strings.Split(v, "-")[1]], strings.Split(v, "-")[0])
+			room1 := strings.Split(v, "-")[0]
+			room2 := strings.Split(v, "-")[1]
+			if slices.Contains(Ways[room1], room2) {
+				log.Fatal("2 rooms can only have 1 link between them......")
+			}
+			Ways[room1] = append(Ways[room1], room2)
+			Ways[room2] = append(Ways[room2], room1)
 		}
 	}
 	if Start == "" || End == "" {
-		log.Fatal("end or start room missing")
+		log.Fatal("end or start room missing....")
 	}
 	Graphoverview = append(Graphoverview, '\n')
 	return nil
