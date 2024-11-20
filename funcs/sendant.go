@@ -27,24 +27,18 @@ func Sendants(ways [][]string) {
 	controltrafic(antgroups, ways)
 }
 
-type infos struct {
-	steps       int
-	currentroom string
-}
-
 func controltrafic(antgroups, ways [][]string) {
-	trafic := make(map[string]infos)
+	trafic := make(map[string]int)
 	unavailablerooms := make(map[string]bool)
 	finished := []string{}
 	for len(finished) != Ants {
 		for i := 0; i < len(ways); i++ {
 			unavailablerooms[End] = false
-
 			for s := 0; s < len(antgroups[i]); s++ {
 				ant := antgroups[i][s]
-				if !unavailablerooms[ways[i][trafic[ant].steps+1]] {
-					if ways[i][trafic[ant].steps+1] == End {
-						unavailablerooms[ways[i][trafic[ant].steps]] = false
+				if !unavailablerooms[ways[i][trafic[ant]+1]] {
+					if ways[i][trafic[ant]+1] == End {
+						unavailablerooms[ways[i][trafic[ant]]] = false
 						finished = append(finished, ant)
 						delete(trafic, ant)
 						antgroups[i] = append(antgroups[i][:s], antgroups[i][s+1:]...)
@@ -53,13 +47,10 @@ func controltrafic(antgroups, ways [][]string) {
 						unavailablerooms[End] = true
 						continue
 					} else {
-						fmt.Printf("%v-%v ", ant, ways[i][trafic[ant].steps+1])
-						ii := trafic[ant]
-						unavailablerooms[ways[i][trafic[ant].steps+1]] = true
-						unavailablerooms[ways[i][trafic[ant].steps]] = false
-						ii.currentroom = ways[i][trafic[ant].steps+1]
-						ii.steps++
-						trafic[ant] = ii
+						fmt.Printf("%v-%v ", ant, ways[i][trafic[ant]+1])
+						unavailablerooms[ways[i][trafic[ant]+1]] = true
+						unavailablerooms[ways[i][trafic[ant]]] = false
+						trafic[ant]++
 					}
 				}
 			}
