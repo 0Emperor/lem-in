@@ -36,6 +36,7 @@ func Sendants(ways [][]string) {
 
 		}
 	}
+	
 	controltrafic(antgroups, ways)
 }
 
@@ -69,10 +70,12 @@ func controltrafic(antgroups, ways [][]string) {
 		}
 		fmt.Println()
 	}
-	//Sort(finished)
-	//fmt.Println(finished)
+	// Sort(finished)
+	// fmt.Println(finished)
+	
 }
 
+// for debuging
 func Sort(s []string) {
 	for i := 0; i < len(s); i++ {
 		for j := i + 1; j < len(s); j++ {
