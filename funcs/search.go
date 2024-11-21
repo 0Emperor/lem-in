@@ -115,16 +115,6 @@ func combine(n int) [][]string {
 	return sss
 }
 
-func sort(unsorted [][]string) [][]string {
-	for i := 0; i < len(unsorted); i++ {
-		for j := i + 1; j < len(unsorted); j++ {
-			if len(unsorted[i]) >= len(unsorted[j]) {
-				unsorted[i], unsorted[j] = unsorted[j], unsorted[i]
-			}
-		}
-	}
-	return unsorted
-}
 
 func gettrials() int {
 	fromstart := len(Ways[Start])

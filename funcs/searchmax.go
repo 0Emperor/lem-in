@@ -11,7 +11,7 @@ func SearchMax() [][]string {
 		node := Ways[Start][i]
 		Bfs(node, End)
 	}
-	sort1(solutions)
+	sort(solutions)
 	validate(solutions)
 	return solutions
 }
@@ -62,7 +62,7 @@ func compare(s1, s2 []string) bool {
 	return true
 }
 
-func sort1(slice [][]string) {
+func sort(slice [][]string) {
 	for i := 0; i < len(slice)-1; i++ {
 		for j := i + 1; j < len(slice); j++ {
 			if len(slice[j]) <= len(slice[i]) {
