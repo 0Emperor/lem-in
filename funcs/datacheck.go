@@ -56,7 +56,8 @@ func ValidData(file *os.File) (error, string) {
 			if Start[0] == 'L' {
 				log.Fatal("room name cant start with 'L'")
 			}
-
+			Graphoverview = append(Graphoverview, data[i+1]...)
+			Graphoverview = append(Graphoverview, '\n')
 			Rooms = append(Rooms, Start)
 			i++
 		} else if v == "##end" {
@@ -72,6 +73,8 @@ func ValidData(file *os.File) (error, string) {
 				log.Fatal("room name cant start with 'L'")
 			}
 			Rooms = append(Rooms, End)
+			Graphoverview = append(Graphoverview, data[i+1]...)
+			Graphoverview = append(Graphoverview, '\n')
 			i++
 		} else if strings.Contains(v, " ") {
 			counter++

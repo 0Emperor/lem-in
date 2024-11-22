@@ -2,7 +2,6 @@ package lem
 
 import (
 	"fmt"
-	"slices"
 )
 
 func SearchMax() [][]string {
@@ -11,42 +10,8 @@ func SearchMax() [][]string {
 		node := Ways[Start][i]
 		Bfs(node, End)
 	}
-	sort(solutions)
-	validate(solutions)
+	sort1(solutions)
 	return solutions
-}
-
-func validate(s [][]string) {
-	for i := 0; i < len(s); i++ {
-		e := s[i][1 : len(s[i])-1]
-		for j := i + 1; j < len(s); j++ {
-			r := s[j][1 : len(s[j])-1]
-			if compare2(r, e) {
-				if i == len(s)-1 {
-					s = s[:i]
-				} else {
-					s = append(s[:j], s[j+1:]...)
-					fmt.Println(s)
-				}
-			}
-		}
-	}
-	solutions = s
-}
-
-func compare2(s1, s2 []string) bool {
-	ss := s1
-	s := s2
-	if len(s1) < len(s2) {
-		ss = s2
-		s = s1
-	}
-	for i, v := range s {
-		if ss[i] == v {
-			return true
-		}
-	}
-	return false
 }
 
 func compare(s1, s2 []string) bool {
@@ -62,7 +27,7 @@ func compare(s1, s2 []string) bool {
 	return true
 }
 
-func sort(slice [][]string) {
+func sort1(slice [][]string) {
 	for i := 0; i < len(slice)-1; i++ {
 		for j := i + 1; j < len(slice); j++ {
 			if len(slice[j]) <= len(slice[i]) {
@@ -71,67 +36,49 @@ func sort(slice [][]string) {
 			if compare(slice[j][1:len(slice[i])-1], slice[i][1:len(slice[i])-1]) {
 				slice = append(slice[:i], slice[i+1:]...)
 			}
+			if !hhhh(slice[j][1:len(slice[i])-1], slice[i][1:len(slice[i])-1]) {
+				if len(slice[j]) < len(slice[i]) {
+					slice = append(slice[:i], slice[i+1:]...)
+				} else {
+					slice = append(slice[:j], slice[j+1:]...)
+				}
+			}
 		}
 	}
+	solutions = slice
 }
+
 func Bfs(s, e string) {
 	fmt.Println(s, visited)
+	parent := make(map[string]string)
+	parent[s] = Start
 	queu := []string{s}
-	levels := [][]string{Ways[Start]}
 	visited[s] = true
 	for i := 0; i < len(queu); i++ {
 		visiting := queu[i]
-		levl := []string{}
 		for _, neighbour := range Ways[visiting] {
 			if !visited[neighbour] {
-				levl = append(levl, neighbour)
 				visited[neighbour] = true
+				parent[neighbour] = visiting
 				queu = append(queu, neighbour)
 			}
 			if neighbour == e {
-				levels = append(levels, levl)
-				solutions = append(solutions, findway(levels))
+				solutions = append(solutions, findway(parent))
 				return
 			}
 		}
-		levels = append(levels, levl)
 	}
 }
 
-func contains(d []string, s [][]string) bool {
-	for _, v := range s {
-		for _, f := range d {
-			if !slices.Contains(v, f) {
-				return false
-			}
-		}
-	}
-	return true
-}
-
-func findway(levels [][]string) []string {
+func findway(parent map[string]string) []string {
 	curent := End
 	visited = make(map[string]bool)
 	way := []string{curent}
-	for i := len(levels) - 1; i >= 0; i-- {
-		for _, v := range levels[i] {
-
-			if exist(curent, Start) && !contains(append(way, Start), solutions) {
-				way = append(way, Start)
-				visited[curent] = true
-				return flip(way)
-			}
-			if exist(curent, v) {
-				way = append(way, v)
-				visited[curent] = true
-				curent = v
-			}
-			if curent == Start {
-				return flip(way)
-			}
-		}
+	for curent != Start {
+		way = append(way, parent[curent])
+		curent = parent[curent]
+		visited[curent] = true
 	}
-	way = append(way, Start)
 	return flip(way)
 }
 
@@ -141,13 +88,4 @@ func flip(s []string) []string {
 		r = append(r, s[i])
 	}
 	return r
-}
-
-func exist(s, v string) bool {
-	for _, t := range Ways[s] {
-		if t == v {
-			return true
-		}
-	}
-	return false
 }

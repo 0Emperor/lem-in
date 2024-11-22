@@ -14,8 +14,6 @@ func set() {
 	}
 }
 
-var rating = make(map[int]int)
-
 func cop(p1, p2 []string) bool {
 	for i, v := range p1 {
 		if p2[i] != v {
@@ -59,11 +57,6 @@ func rate() {
 	}
 }
 
-type ppp struct {
-	rating int
-	index  int
-}
-
 func sortby(ss []ppp) []ppp {
 	for i := 0; i < len(ss)-1; i++ {
 		for j := i + 1; j < len(ss); j++ {
@@ -102,8 +95,6 @@ func combine(n int) [][]string {
 		if !hhhh(supp...) {
 			sss = append(sss, solutions[i])
 		} else if len(solutions[max]) > 2*len(solutions[i]) {
-			supp = [][]string{}
-			supp = append(sss, solutions[i])
 			max = i
 			u = 0
 		}
@@ -115,6 +106,16 @@ func combine(n int) [][]string {
 	return sss
 }
 
+func sort(unsorted [][]string) [][]string {
+	for i := 0; i < len(unsorted); i++ {
+		for j := i + 1; j < len(unsorted); j++ {
+			if len(unsorted[i]) >= len(unsorted[j]) {
+				unsorted[i], unsorted[j] = unsorted[j], unsorted[i]
+			}
+		}
+	}
+	return unsorted
+}
 
 func gettrials() int {
 	fromstart := len(Ways[Start])
@@ -126,16 +127,10 @@ func gettrials() int {
 	}
 }
 
-var (
-	visited   = make(map[string]bool)
-	solutions [][]string
-	stack     []string
-)
-
 func Dfs(current string) {
 	stack = append(stack, current)
 
-	if visited[current] { //|| (len(Ways[current]) == 1 && current != End && current != Start)
+	if visited[current] { 
 		stack = stack[:len(stack)-1]
 		return
 	}

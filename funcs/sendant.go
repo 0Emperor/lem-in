@@ -36,7 +36,6 @@ func Sendants(ways [][]string) {
 
 		}
 	}
-	
 	controltrafic(antgroups, ways)
 }
 
