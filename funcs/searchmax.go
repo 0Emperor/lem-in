@@ -6,11 +6,12 @@ import (
 
 func SearchMax() [][]string {
 	visited[Start] = true
-	for i := len(Ways[Start]) - 1; i >= 0; i-- {
+	for i := 0; i < len(Ways[Start]); i++ {
 		node := Ways[Start][i]
-		Bfs(node, End)
+		Bfs(node)
+		fmt.Println(solutions)
 	}
-	sort1(solutions)
+	sort1()
 	return solutions
 }
 
@@ -27,47 +28,49 @@ func compare(s1, s2 []string) bool {
 	return true
 }
 
-func sort1(slice [][]string) {
-	for i := 0; i < len(slice)-1; i++ {
-		for j := i + 1; j < len(slice); j++ {
-			if len(slice[j]) <= len(slice[i]) {
-				slice[i], slice[j] = slice[j], slice[i]
+func sort1() {
+	for i := 0; i < len(solutions)-1; i++ {
+		for j := i + 1; j < len(solutions); j++ {
+			if len(solutions[j]) < len(solutions[i]) {
+				solutions[i], solutions[j] = solutions[j], solutions[i]
 			}
-			if compare(slice[j][1:len(slice[i])-1], slice[i][1:len(slice[i])-1]) {
-				slice = append(slice[:i], slice[i+1:]...)
-			}
-			if !hhhh(slice[j][1:len(slice[i])-1], slice[i][1:len(slice[i])-1]) {
-				if len(slice[j]) < len(slice[i]) {
-					slice = append(slice[:i], slice[i+1:]...)
-				} else {
-					slice = append(slice[:j], slice[j+1:]...)
-				}
+			if compare(solutions[j][1:len(solutions[i])-1], solutions[i][1:len(solutions[i])-1]) {
+				solutions = append(solutions[:i], solutions[i+1:]...)
 			}
 		}
 	}
-	solutions = slice
 }
 
-func Bfs(s, e string) {
-	fmt.Println(s, visited)
+func Bfs(s string) bool {
 	parent := make(map[string]string)
 	parent[s] = Start
+	fmt.Println(s)
+	if s == End {
+		solutions = append(solutions, findway(parent))
+		return false
+	}
+	visited[Start] = true
 	queu := []string{s}
 	visited[s] = true
 	for i := 0; i < len(queu); i++ {
 		visiting := queu[i]
 		for _, neighbour := range Ways[visiting] {
+			if s == "h" && neighbour == "n" {
+				continue
+			}
 			if !visited[neighbour] {
 				visited[neighbour] = true
 				parent[neighbour] = visiting
 				queu = append(queu, neighbour)
 			}
-			if neighbour == e {
+			if neighbour == End {
 				solutions = append(solutions, findway(parent))
-				return
+				Close()
+				return false
 			}
 		}
 	}
+	return true
 }
 
 func findway(parent map[string]string) []string {
@@ -77,9 +80,17 @@ func findway(parent map[string]string) []string {
 	for curent != Start {
 		way = append(way, parent[curent])
 		curent = parent[curent]
-		visited[curent] = true
 	}
 	return flip(way)
+}
+
+func Close() {
+	visited = make(map[string]bool)
+	for _, s := range solutions {
+		for _, v := range s[1 : len(s)-1] {
+			visited[v] = true
+		}
+	}
 }
 
 func flip(s []string) []string {

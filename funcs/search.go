@@ -5,7 +5,7 @@ func Search() [][]string {
 	sort(solutions)
 	set()
 	rate()
-	return combine(gettrials())
+	return combine(len(Ways[Start]))
 }
 
 func set() {
@@ -90,8 +90,7 @@ func combine(n int) [][]string {
 		if len(solutions[i]) > max {
 			max = i
 		}
-		supp := [][]string{}
-		supp = append(sss, solutions[i])
+		supp := append(sss, solutions[i])
 		if !hhhh(supp...) {
 			sss = append(sss, solutions[i])
 		} else if len(solutions[max]) > 2*len(solutions[i]) {
@@ -109,7 +108,7 @@ func combine(n int) [][]string {
 func sort(unsorted [][]string) [][]string {
 	for i := 0; i < len(unsorted); i++ {
 		for j := i + 1; j < len(unsorted); j++ {
-			if len(unsorted[i]) >= len(unsorted[j]) {
+			if len(unsorted[i]) > len(unsorted[j]) {
 				unsorted[i], unsorted[j] = unsorted[j], unsorted[i]
 			}
 		}
@@ -117,20 +116,10 @@ func sort(unsorted [][]string) [][]string {
 	return unsorted
 }
 
-func gettrials() int {
-	fromstart := len(Ways[Start])
-	fromend := len(Ways[End])
-	if fromend <= fromstart {
-		return fromend
-	} else {
-		return fromstart
-	}
-}
-
 func Dfs(current string) {
 	stack = append(stack, current)
 
-	if visited[current] { 
+	if visited[current] {
 		stack = stack[:len(stack)-1]
 		return
 	}

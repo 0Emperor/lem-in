@@ -5,7 +5,6 @@ var (
 	Emptyroom = make(map[string]bool)
 	rating    = make(map[int]int)
 	Rooms     = []string{}
-
 	Start, End    string
 	Ants          int
 	Graphoverview []byte
