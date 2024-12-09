@@ -1,6 +1,7 @@
 package lem
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"slices"
@@ -49,13 +50,11 @@ func ValidData(file *os.File) (error, string) {
 			if i == len(data)-1 {
 				log.Fatal("end or start room missing")
 			}
+
+			if !checkroom(data[i+1]) {
+				log.Fatal("Invalid room3")
+			}
 			Start = strings.Split(data[i+1], " ")[0]
-			if len(strings.Split(data[i+1], " ")) != 3 {
-				log.Fatal("invalid input for start")
-			}
-			if Start[0] == 'L' {
-				log.Fatal("room name cant start with 'L'")
-			}
 			Graphoverview = append(Graphoverview, data[i+1]...)
 			Graphoverview = append(Graphoverview, '\n')
 			Rooms = append(Rooms, Start)
@@ -65,34 +64,37 @@ func ValidData(file *os.File) (error, string) {
 			if i == len(data)-1 {
 				log.Fatal("end or start room missing")
 			}
+
+			if !checkroom(data[i+1]) {
+				log.Fatal("Invalid room2")
+			}
 			End = strings.Split(data[i+1], " ")[0]
-			if len(strings.Split(data[i+1], " ")) != 3 {
-				log.Fatal("invalid input for end")
-			}
-			if End[0] == 'L' {
-				log.Fatal("room name cant start with 'L'")
-			}
 			Rooms = append(Rooms, End)
 			Graphoverview = append(Graphoverview, data[i+1]...)
 			Graphoverview = append(Graphoverview, '\n')
 			i++
 		} else if strings.Contains(v, " ") {
 			counter++
+			if !checkroom(v) {
+				log.Fatal("Invalid room1")
+			}
 			room := strings.Split(v, " ")[0]
-			if len(strings.Split(v, " ")) != 3 {
-				log.Fatal("invalid room data.....")
-			}
-			if room[0] == 'L' {
-				log.Fatal("room name cant start with 'L'.....")
-			}
+
 			Rooms = append(Rooms, room)
 		} else {
-			room1 := strings.Split(v, "-")[0]
-			room2 := strings.Split(v, "-")[1]
+			link := strings.Split(v, "-")
+			if len(link) != 2 {
+				log.Fatal("invalid link")
+			}
+			room1 := link[0]
+			room2 := link[1]
+			if !seen[room1] || !seen[room2] {
+				log.Fatal("link contains inexistentroom")
+			}
 			if slices.Contains(Ways[room1], room2) {
 				log.Fatal("2 rooms can only have 1 link between them......")
 			}
-			counter += 2
+			counter += 1
 			Ways[room1] = append(Ways[room1], room2)
 			Ways[room2] = append(Ways[room2], room1)
 		}
@@ -106,4 +108,26 @@ func ValidData(file *os.File) (error, string) {
 	}
 	Graphoverview = append(Graphoverview, '\n')
 	return nil, searchmethod
+}
+
+func checkroom(room string) bool {
+	roomparts := strings.Split(room, " ")
+	if len(roomparts) != 3 {
+		fmt.Println(len(roomparts))
+		fmt.Println(room)
+		return false
+	}
+	_, err1 := strconv.Atoi(roomparts[1])
+	if _, err2 := strconv.Atoi(roomparts[2]); err1 != nil || err2 != nil {
+		return false
+	}
+	roomname := roomparts[0]
+	if roomname[0] == 'L' {
+		return false
+	}
+	if seen[roomname] {
+		return false
+	}
+	seen[roomname] = true
+	return true
 }

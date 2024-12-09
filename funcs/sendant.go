@@ -5,38 +5,46 @@ import (
 	"strconv"
 )
 
-func Sendants(ways [][]string) {
-	antgroups := [][]string{}
-	antid := 1
-	if len(ways) > Ants {
-		ways = ways[:Ants]
+func ini(s [][]string) map[int]int {
+	mapp := make(map[int]int)
+	for v := range s {
+		mapp[v] = len(s[v])
 	}
-	for i := 0; i < len(ways); i++ {
-		antgroup := []string{}
-		for j := 0; j < Ants/len(ways); j++ {
-			if antid > Ants {
-				break
-			}
-			antgroup = append(antgroup, "L"+strconv.Itoa(antid))
-			antid++
-		}
-		if i == 0 && antid < Ants {
-			antgroup = append(antgroup, "L"+strconv.Itoa(antid))
-			antid++
-		}
-		antgroups = append(antgroups, antgroup)
-	}
-	if antid < Ants+1 {
-		for i := 0; i < len(antgroups); i++ {
-			if antid > Ants {
-				break
-			}
-			antgroups[i] = append(antgroups[i], "L"+strconv.Itoa(antid))
-			antid++
+	return mapp
+}
 
+func getmin(v map[int]int) int {
+	i := v[0]
+	x := 0
+	for t, vv := range v {
+		if vv < i {
+			i = vv
+			x = t
 		}
 	}
-	controltrafic(antgroups, ways)
+	return x
+}
+
+func initt(i int) [][]string {
+	ff := [][]string{}
+	for t := 0; t < i; t++ {
+		ff = append(ff, []string{})
+	}
+	return ff
+}
+
+func Sendants(ways [][]string) {
+	antgroups := initt(len(ways))
+	antid := 1
+	sss := ini(ways)
+
+	for antid <= Ants {
+		s := getmin(sss)
+		antgroups[s] = append(antgroups[s], "L"+strconv.Itoa(antid))
+		antid++
+		sss[s]++
+	}
+ controltrafic(antgroups, ways)
 }
 
 func controltrafic(antgroups, ways [][]string) {
@@ -68,19 +76,5 @@ func controltrafic(antgroups, ways [][]string) {
 			}
 		}
 		fmt.Println()
-	}
-	// Sort(finished)
-	// fmt.Println(finished)
-	
-}
-
-// for debuging
-func Sort(s []string) {
-	for i := 0; i < len(s); i++ {
-		for j := i + 1; j < len(s); j++ {
-			if s[j] < s[i] {
-				s[j], s[i] = s[i], s[j]
-			}
-		}
 	}
 }

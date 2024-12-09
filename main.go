@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -17,11 +18,12 @@ func main() {
 	case "bfs":
 		validways = lem.SearchMax()
 	default:
-		validways = lem.Search()
+		validways = lem.SearchMax()
 	}
 	if len(validways) == 0 || lem.Ants == 0 {
 		log.Fatal("ERROR: invalid data format")
 	}
+	fmt.Println(1111)
 	os.Stdout.Write(lem.Graphoverview)
 	lem.Sendants(validways)
 }

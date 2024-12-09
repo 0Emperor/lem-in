@@ -1,15 +1,9 @@
 package lem
 
-import (
-	"fmt"
-)
-
 func SearchMax() [][]string {
 	visited[Start] = true
 	for i := 0; i < len(Ways[Start]); i++ {
-		node := Ways[Start][i]
-		Bfs(node)
-		fmt.Println(solutions)
+		Bfs(Start)
 	}
 	sort1()
 	return solutions
@@ -44,7 +38,6 @@ func sort1() {
 func Bfs(s string) bool {
 	parent := make(map[string]string)
 	parent[s] = Start
-	fmt.Println(s)
 	if s == End {
 		solutions = append(solutions, findway(parent))
 		return false

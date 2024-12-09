@@ -97,11 +97,12 @@ func combine(n int) [][]string {
 			max = i
 			u = 0
 		}
-		sort(sss)
 		if len(sss) == n {
 			break
 		}
 	}
+	sort(sss)
+
 	return sss
 }
 
