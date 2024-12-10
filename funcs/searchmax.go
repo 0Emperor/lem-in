@@ -4,6 +4,9 @@ func SearchMax() [][]string {
 	visited[Start] = true
 	for i := 0; i < len(Ways[Start]); i++ {
 		Bfs(Start)
+		if len(solutions) == Ants {
+			break
+		}
 	}
 	sort1()
 	return solutions

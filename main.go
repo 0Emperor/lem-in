@@ -9,21 +9,25 @@ import (
 )
 
 func main() {
-	err, Search := lem.ValidData(lem.ValidArgs(os.Args))
-	if err != nil {
-		log.Fatal(err)
+	err, counter := lem.ReadFile(lem.ValidArgs(os.Args))
+	if err != "" {
+		log.Fatal(err + "1")
 	}
 	validways := [][]string{}
-	switch Search {
-	case "bfs":
-		validways = lem.SearchMax()
-	default:
+	chann := make(chan bool)
+	go func(s chan bool) {
+		os.Stdout.Write(lem.Graphoverview)
+		fmt.Println()
+		s <- true
+	}(chann)
+	if counter < 500 {
+		validways = lem.Search()
+	} else {
 		validways = lem.SearchMax()
 	}
-	if len(validways) == 0 || lem.Ants == 0 {
-		log.Fatal("ERROR: invalid data format")
+	<-chann
+	if len(validways) == 0 {
+		log.Fatal("ERROR: no way found ")
 	}
-	fmt.Println(1111)
-	os.Stdout.Write(lem.Graphoverview)
 	lem.Sendants(validways)
 }
