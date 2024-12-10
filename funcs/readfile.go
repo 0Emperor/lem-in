@@ -13,7 +13,9 @@ func ReadFile(file *os.File) (string, int) {
 	scanner := bufio.NewScanner(file)
 	i := 0
 	counter := 0
+	nline := 0
 	for scanner.Scan() {
+		nline++
 		line := scanner.Text()
 		if strings.HasPrefix(line, "#") {
 			if line == "##start" {
@@ -26,29 +28,29 @@ func ReadFile(file *os.File) (string, int) {
 		if i == 0 {
 			num, err := strconv.Atoi(line)
 			if err != nil {
-				return "ERROR: invalid number of ants", 0
+				return "ERROR: invalid number of ants (LINE:" + strconv.Itoa(nline) + ")", 0
 			}
 			if num == 0 {
-				return "ERROR: number of ants cant be 0", 0
+				return "ERROR: number of ants cant be 0 (LINE:" + strconv.Itoa(nline) + ")", 0
 			}
 			Ants = num
 			i = 1
 		} else if i == 2 {
 			if !checkroom(line) {
-				return "ERROR: invalid start rooom", 0
+				return "ERROR: invalid start rooom (LINE:" + strconv.Itoa(nline) + ")", 0
 			}
 			Start = room(line)
 			i = 1
 		} else if i == 3 {
 			if !checkroom(line) {
-				return "ERROR: invalid end rooom", 0
+				return "ERROR: invalid end rooom (LINE:" + strconv.Itoa(nline) + ")", 0
 			}
 			End = room(line)
 			i = 1
-		} else if !checkroom(line)  {
+		} else if !checkroom(line) {
 			if !checklink(line) {
 				fmt.Println(line)
-				return "ERROR: invalid data format", 0
+				return "ERROR: invalid data format (LINE:" + strconv.Itoa(nline) + ")", 0
 			}
 			link := strings.Split(line, "-")
 			room1 := link[0]
