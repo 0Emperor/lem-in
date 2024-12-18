@@ -2,17 +2,15 @@ package lem
 
 import (
 	"bufio"
-	"fmt"
 	"os"
 	"strconv"
 	"strings"
 )
 
-func ReadFile(file *os.File) (string, int) {
+func ReadFile(file *os.File) string {
 	defer file.Close()
 	scanner := bufio.NewScanner(file)
 	i := 0
-	counter := 0
 	nline := 0
 	for scanner.Scan() {
 		nline++
@@ -28,29 +26,28 @@ func ReadFile(file *os.File) (string, int) {
 		if i == 0 {
 			num, err := strconv.Atoi(line)
 			if err != nil {
-				return "ERROR: invalid number of ants (LINE:" + strconv.Itoa(nline) + ")", 0
+				return "ERROR: invalid number of ants (LINE:" + strconv.Itoa(nline) + ")"
 			}
 			if num == 0 {
-				return "ERROR: number of ants cant be 0 (LINE:" + strconv.Itoa(nline) + ")", 0
+				return "ERROR: number of ants cant be 0 (LINE:" + strconv.Itoa(nline) + ")"
 			}
 			Ants = num
 			i = 1
 		} else if i == 2 {
 			if !checkroom(line) {
-				return "ERROR: invalid start rooom (LINE:" + strconv.Itoa(nline) + ")", 0
+				return "ERROR: invalid start rooom (LINE:" + strconv.Itoa(nline) + ")"
 			}
 			Start = room(line)
 			i = 1
 		} else if i == 3 {
 			if !checkroom(line) {
-				return "ERROR: invalid end rooom (LINE:" + strconv.Itoa(nline) + ")", 0
+				return "ERROR: invalid end rooom (LINE:" + strconv.Itoa(nline) + ")"
 			}
 			End = room(line)
 			i = 1
 		} else if !checkroom(line) {
 			if !checklink(line) {
-				fmt.Println(line)
-				return "ERROR: invalid data format (LINE:" + strconv.Itoa(nline) + ")", 0
+				return "ERROR: invalid data format (LINE:" + strconv.Itoa(nline) + ")"
 			}
 			link := strings.Split(line, "-")
 			room1 := link[0]
@@ -61,11 +58,8 @@ func ReadFile(file *os.File) (string, int) {
 			room := room(line)
 			Rooms = append(Rooms, room)
 		}
-		Graphoverview = append(Graphoverview, []byte(line)...)
-		Graphoverview = append(Graphoverview, '\n')
-		counter++
 	}
-	return "", counter
+	return ""
 }
 
 func room(s string) string {

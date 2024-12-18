@@ -7,7 +7,6 @@ var (
 	Rooms     = []string{}
 	Start, End    string
 	Ants          int
-	Graphoverview []byte
 	seen =make(map[string]bool)
 )
 

@@ -1,9 +1,11 @@
 package lem
 
-func SearchMax() [][]string {
+var potential [][][]string
+
+func Search() [][]string {
 	visited[Start] = true
 	for i := 0; i < len(Ways[Start]); i++ {
-		Bfs(Start)
+		Bfs(Ways[Start][i])
 		if len(solutions) == Ants {
 			break
 		}

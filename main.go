@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"os"
 
@@ -9,25 +10,23 @@ import (
 )
 
 func main() {
-	err, counter := lem.ReadFile(lem.ValidArgs(os.Args))
+	err := lem.ReadFile(lem.ValidArgs(os.Args))
 	if err != "" {
-		log.Fatal(err + "1")
+		log.Fatal(err)
 	}
-	validways := [][]string{}
-	chann := make(chan bool)
-	go func(s chan bool) {
-		os.Stdout.Write(lem.Graphoverview)
-		fmt.Println()
-		s <- true
-	}(chann)
-	if counter < 500 {
-		validways = lem.Search()
-	} else {
-		validways = lem.SearchMax()
-	}
-	<-chann
+	validways := lem.Search()
 	if len(validways) == 0 {
 		log.Fatal("ERROR: no way found ")
 	}
+	file, er := os.Open(os.Args[1])
+	if er != nil {
+		log.Fatal(err)
+	}
+	graph, er := io.ReadAll(file)
+	if er != nil {
+		log.Fatal(err)
+	}
+	os.Stdout.Write(graph)
+	fmt.Println("\n")
 	lem.Sendants(validways)
 }
