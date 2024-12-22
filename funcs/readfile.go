@@ -54,9 +54,28 @@ func ReadFile(file *os.File) string {
 			room2 := link[1]
 			Ways[room1] = append(Ways[room1], room2)
 			Ways[room2] = append(Ways[room2], room1)
+			if len(Ways[room1]) == max {
+				badrooms = append(badrooms, room1)
+			}
+			if len(Ways[room2]) == max {
+				badrooms = append(badrooms, room2)
+			}
+			if len(Ways[room1]) > max {
+				max = len(Ways[room1])
+				badrooms = nil
+				badrooms = append(badrooms, room1)
+			}
+			if len(Ways[room2]) > max {
+				max = len(Ways[room2])
+				badrooms = nil
+				badrooms = append(badrooms, room2)
+
+			}
+
 		} else {
 			room := room(line)
 			Rooms = append(Rooms, room)
+
 		}
 	}
 	return ""

@@ -1,11 +1,16 @@
 package lem
 
-var potential [][][]string
-
 func Search() [][]string {
 	visited[Start] = true
+	for i := 0; i < len(Ways[Start])-1; i++ {
+		if len(solutions) == Ants-1 {
+			break
+		}
+		Bfs(Start, true)
+	}
+
 	for i := 0; i < len(Ways[Start]); i++ {
-		Bfs(Ways[Start][i])
+		Bfs(Start, false)
 		if len(solutions) == Ants {
 			break
 		}
@@ -40,7 +45,7 @@ func sort1() {
 	}
 }
 
-func Bfs(s string) bool {
+func Bfs(s string, ignor bool) bool {
 	parent := make(map[string]string)
 	parent[s] = Start
 	if s == End {
@@ -53,7 +58,7 @@ func Bfs(s string) bool {
 	for i := 0; i < len(queu); i++ {
 		visiting := queu[i]
 		for _, neighbour := range Ways[visiting] {
-			if s == "h" && neighbour == "n" {
+			if ccc(neighbour) && ignor {
 				continue
 			}
 			if !visited[neighbour] {
@@ -69,6 +74,15 @@ func Bfs(s string) bool {
 		}
 	}
 	return true
+}
+
+func ccc(s string) bool {
+	for _, v := range badrooms {
+		if v == s {
+			return true
+		}
+	}
+	return false
 }
 
 func findway(parent map[string]string) []string {
