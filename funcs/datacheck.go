@@ -22,9 +22,14 @@ func checklink(link string) bool {
 	if len(linnk) != 2 {
 		return false
 	}
+	if checklinks[link] || checklinks[linnk[1]+"-"+linnk[0]] {
+		return false
+	}
 	if !seen[linnk[1]] || !seen[linnk[0]] {
 		return false
 	}
+	checklinks[link] = true
+	checklinks[linnk[1]+"-"+linnk[0]] = true
 	return true
 }
 

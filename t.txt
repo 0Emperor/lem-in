@@ -1,4 +1,4 @@
-10
+4
 ##start
 start 1 6
 0 4 8
@@ -10,13 +10,15 @@ E 5 9
 a 8 9
 m 8 6
 h 4 6
-A 5 2
+
+A 5 7
 c 8 1
 k 11 2
 ##end
 end 11 6
 start-t
 n-e
+e-n
 a-m
 A-c
 0-o

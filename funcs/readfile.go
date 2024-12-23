@@ -14,15 +14,7 @@ func ReadFile(file *os.File) string {
 	nline := 0
 	for scanner.Scan() {
 		nline++
-		line := scanner.Text()
-		if strings.HasPrefix(line, "#") {
-			if line == "##start" {
-				i = 2
-			} else if line == "##end" {
-				i = 3
-			}
-			continue
-		}
+		line := strings.TrimSpace(scanner.Text())
 		if i == 0 {
 			num, err := strconv.Atoi(line)
 			if err != nil {
@@ -33,7 +25,17 @@ func ReadFile(file *os.File) string {
 			}
 			Ants = num
 			i = 1
-		} else if i == 2 {
+			continue
+		}
+		if strings.HasPrefix(line, "#") || line == "" {
+			if line == "##start" {
+				i = 2
+			} else if line == "##end" {
+				i = 3
+			}
+			continue
+		}
+		if i == 2 {
 			if !checkroom(line) {
 				return "ERROR: invalid start rooom (LINE:" + strconv.Itoa(nline) + ")"
 			}
@@ -72,12 +74,9 @@ func ReadFile(file *os.File) string {
 
 			}
 
-		} else {
-			room := room(line)
-			Rooms = append(Rooms, room)
-
 		}
 	}
+	checklinks = nil
 	return ""
 }
 

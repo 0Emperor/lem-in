@@ -2,21 +2,36 @@ package lem
 
 func Search() [][]string {
 	visited[Start] = true
+	if contains(Ways[Start]) {
+		solutions = append(solutions, []string{Start, End})
+	}
 	for i := 0; i < len(Ways[Start])-1; i++ {
 		if len(solutions) == Ants-1 {
 			break
 		}
 		Bfs(Start, true)
 	}
-
+	Close()
 	for i := 0; i < len(Ways[Start]); i++ {
+
 		Bfs(Start, false)
+
 		if len(solutions) == Ants {
 			break
 		}
 	}
 	sort1()
 	return solutions
+}
+
+func contains(s []string) bool {
+	for i, v := range s {
+		if v == End {
+			Ways[Start] = append(Ways[Start][:i], Ways[Start][i+1:]...)
+			return true
+		}
+	}
+	return false
 }
 
 func compare(s1, s2 []string) bool {
@@ -49,12 +64,15 @@ func Bfs(s string, ignor bool) bool {
 	parent := make(map[string]string)
 	parent[s] = Start
 	if s == End {
+
 		solutions = append(solutions, findway(parent))
 		return false
 	}
+
 	visited[Start] = true
 	queu := []string{s}
 	visited[s] = true
+
 	for i := 0; i < len(queu); i++ {
 		visiting := queu[i]
 		for _, neighbour := range Ways[visiting] {
@@ -70,6 +88,7 @@ func Bfs(s string, ignor bool) bool {
 				solutions = append(solutions, findway(parent))
 				Close()
 				return false
+
 			}
 		}
 	}
@@ -112,3 +131,4 @@ func flip(s []string) []string {
 	}
 	return r
 }
+

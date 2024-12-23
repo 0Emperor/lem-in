@@ -5,7 +5,7 @@ import (
 	"strconv"
 )
 
-func ini(s [][]string) map[int]int {
+func InitMap(s [][]string) map[int]int {
 	mapp := make(map[int]int)
 	for v := range s {
 		mapp[v] = len(s[v])
@@ -13,7 +13,7 @@ func ini(s [][]string) map[int]int {
 	return mapp
 }
 
-func getmin(v map[int]int) int {
+func Getmin(v map[int]int) int {
 	i := v[0]
 	x := 0
 	for t, vv := range v {
@@ -25,53 +25,44 @@ func getmin(v map[int]int) int {
 	return x
 }
 
-func initt(i int) [][]string {
-	ff := [][]string{}
-	for t := 0; t < i; t++ {
-		ff = append(ff, []string{})
+// sending the ants to the farm
+func Sendants() {
+	antGroups := make([][]string, len(solutions))
+	antId := 1
+	mapp := InitMap(solutions)
+
+	for antId <= Ants {
+		minPath := Getmin(mapp)
+		antGroups[minPath] = append(antGroups[minPath], "L"+strconv.Itoa(antId))
+		antId++
+		mapp[minPath]++
 	}
-	return ff
+	control_trafic(antGroups)
 }
 
-func Sendants(ways [][]string) {
-	antgroups := initt(len(ways))
-	antid := 1
-	sss := ini(ways)
-
-	for antid <= Ants {
-		s := getmin(sss)
-		antgroups[s] = append(antgroups[s], "L"+strconv.Itoa(antid))
-		antid++
-		sss[s]++
-	}
- controltrafic(antgroups, ways)
-}
-
-func controltrafic(antgroups, ways [][]string) {
+func control_trafic(antGroups [][]string) {
 	trafic := make(map[string]int)
-	unavailablerooms := make(map[string]bool)
-	finished := []string{}
-	for len(finished) != Ants {
-		for i := 0; i < len(ways); i++ {
-			unavailablerooms[End] = false
-			for s := 0; s < len(antgroups[i]); s++ {
-				ant := antgroups[i][s]
-				if !unavailablerooms[ways[i][trafic[ant]+1]] {
-					if ways[i][trafic[ant]+1] == End {
-						unavailablerooms[ways[i][trafic[ant]]] = false
-						finished = append(finished, ant)
+	Emptyroom := make(map[string]bool)
+	finished := 0
+	for finished != Ants {
+		for i := 0; i < len(solutions); i++ {
+			Emptyroom[End] = false
+			for currentStep := 0; currentStep < len(antGroups[i]); currentStep++ {
+				ant := antGroups[i][currentStep]
+				nextroom := solutions[i][trafic[ant]+1]
+				if !Emptyroom[nextroom] {
+					fmt.Printf("%v-%v ", ant, nextroom)
+					Emptyroom[nextroom] = true
+					Emptyroom[solutions[i][trafic[ant]]] = false
+					if nextroom == End {
+						finished++
 						delete(trafic, ant)
-						antgroups[i] = append(antgroups[i][:s], antgroups[i][s+1:]...)
-						fmt.Printf("%v-%v ", ant, End)
-						s--
-						unavailablerooms[End] = true
+						antGroups[i] = append(antGroups[i][:currentStep], antGroups[i][currentStep+1:]...)
+						currentStep--
+						Emptyroom[End] = true
 						continue
-					} else {
-						fmt.Printf("%v-%v ", ant, ways[i][trafic[ant]+1])
-						unavailablerooms[ways[i][trafic[ant]+1]] = true
-						unavailablerooms[ways[i][trafic[ant]]] = false
-						trafic[ant]++
 					}
+					trafic[ant]++
 				}
 			}
 		}

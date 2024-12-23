@@ -27,6 +27,6 @@ func main() {
 		log.Fatal(err)
 	}
 	os.Stdout.Write(graph)
-	fmt.Println("\n")
-	lem.Sendants(validways)
+	fmt.Print("\n\n")
+	lem.Sendants()
 }
