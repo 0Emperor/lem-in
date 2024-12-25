@@ -1,4 +1,4 @@
-4
+13
 ##start
 start 1 6
 0 4 8
@@ -10,15 +10,20 @@ E 5 9
 a 8 9
 m 8 6
 h 4 6
-
-A 5 7
+A 5 2
+b 1 88
+i 12 87
 c 8 1
 k 11 2
+w 87 9
+q 5 88
+v 77 89 
+55 2 48
+66 5 944
+x 65 55
 ##end
 end 11 6
-start-t
 n-e
-e-n
 a-m
 A-c
 0-o
@@ -28,9 +33,20 @@ start-h
 o-n
 m-end
 t-E
+start-t
 start-0
 h-A
 e-end
 c-k
 n-m
 h-n
+a-v
+a-w
+a-q
+q-55
+w-o
+v-66
+66-end
+a-x
+x-end
+55-end

@@ -2,36 +2,55 @@ package lem
 
 func Search() [][]string {
 	visited[Start] = true
-	if contains(Ways[Start]) {
-		solutions = append(solutions, []string{Start, End})
-	}
-	for i := 0; i < len(Ways[Start])-1; i++ {
-		if len(solutions) == Ants-1 {
-			break
-		}
-		Bfs(Start, true)
-	}
-	Close()
-	for i := 0; i < len(Ways[Start]); i++ {
-
-		Bfs(Start, false)
-
-		if len(solutions) == Ants {
-			break
-		}
-	}
+	sol1 := SearchHelper(Ants, false)
+	visited = make(map[string]bool)
+	visited[Start] = true
+	sol2 := SearchHelper(Ants, true)
+	choose(sol1, sol2)
 	sort1()
 	return solutions
 }
 
-func contains(s []string) bool {
-	for i, v := range s {
-		if v == End {
-			Ways[Start] = append(Ways[Start][:i], Ways[Start][i+1:]...)
-			return true
+func choose(sol1, sol2 [][]string) {
+	if len(sol1) < len(sol2) {
+		solutions = sol2
+		return
+	}
+	if len(sol1) > len(sol2) {
+		solutions = sol1
+		return
+	}
+	avg1 := avg(sol1)
+	avg2 := avg(sol2)
+	if avg1 > avg2 {
+		solutions = sol2
+		return
+	}
+	solutions = sol1
+}
+
+func avg(sli [][]string) int {
+	avg := 0
+	for _, v := range sli {
+		avg += len(v)
+	}
+	return avg / len(sli)
+}
+
+func SearchHelper(ant int, rev bool) [][]string {
+	sol := [][]string{}
+	if !rev {
+		for i := 0; i < len(Ways[Start]); i++ {
+			Bfs(Ways[Start][i], &sol, &ant)
+			Close(sol)
+		}
+	} else {
+		for i := len(Ways[Start]) - 1; i >= 0; i-- {
+			Bfs(Ways[Start][i], &sol, &ant)
+			Close(sol)
 		}
 	}
-	return false
+	return sol
 }
 
 func compare(s1, s2 []string) bool {
@@ -60,7 +79,8 @@ func sort1() {
 	}
 }
 
-func Bfs(s string, ignor bool) bool {
+func Bfs(s string, solution1 *[][]string, ant *int) bool {
+	solution := *solution1
 	parent := make(map[string]string)
 	parent[s] = Start
 	if s == End {
@@ -76,17 +96,29 @@ func Bfs(s string, ignor bool) bool {
 	for i := 0; i < len(queu); i++ {
 		visiting := queu[i]
 		for _, neighbour := range Ways[visiting] {
-			if ccc(neighbour) && ignor {
-				continue
-			}
 			if !visited[neighbour] {
 				visited[neighbour] = true
 				parent[neighbour] = visiting
 				queu = append(queu, neighbour)
 			}
 			if neighbour == End {
-				solutions = append(solutions, findway(parent))
-				Close()
+				newPath := findway(parent)
+				if len(solution) > 0 {
+					if len(solution) > Ants {
+						if len(solution[len(solution)-1]) > len(newPath) {
+							solution[len(solution)-1] = newPath
+							*solution1 = solution
+						}
+						return false
+					} else if len(newPath) < *ant {
+						*ant -= len(solution[len(solution)-1])
+						solution = append(solution, newPath)
+						*solution1 = solution
+						return false
+					}
+				}
+				solution = append(solution, newPath)
+				*solution1 = solution
 				return false
 
 			}
@@ -115,9 +147,9 @@ func findway(parent map[string]string) []string {
 	return flip(way)
 }
 
-func Close() {
+func Close(sol [][]string) {
 	visited = make(map[string]bool)
-	for _, s := range solutions {
+	for _, s := range sol {
 		for _, v := range s[1 : len(s)-1] {
 			visited[v] = true
 		}
@@ -131,4 +163,3 @@ func flip(s []string) []string {
 	}
 	return r
 }
-
