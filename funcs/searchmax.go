@@ -9,6 +9,7 @@ func Search() [][]string {
 	choose(sol1, sol2)
 	sort1()
 	return solutions
+	
 }
 
 func choose(sol1, sol2 [][]string) {
